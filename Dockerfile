@@ -1,13 +1,13 @@
 # syntax=docker/dockerfile:1
 
-FROM golang:1.23
+FROM golang:latest
 
 # Set destination for COPY
 WORKDIR /app
 
 # Download Go modules
 COPY go.mod go.sum ./
-RUN go mod download && go mod verify
+RUN go mod tidy && go mod download && go mod verify
 
 # Copy the source code. Note the slash at the end, as explained in
 # https://docs.docker.com/reference/dockerfile/#copy
