@@ -25,6 +25,10 @@
         let offsetX = 0;
         let offsetY = 0;
 
+        // Touch tracking
+        let lastTouchX = 0;
+        let lastTouchY = 0;
+
         // Grid drawing function
         const drawGrid = () => {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -49,20 +53,48 @@
             }
         };
 
-        // Scroll handler
-        const handleScroll = (e) => {
+        // Scroll handler for mouse wheel
+        const handleWheelScroll = (e) => {
             offsetX += e.deltaX;
             offsetY += e.deltaY;
-
-            // Constrain scrolling within grid boundaries
-            offsetX = Math.max(0, Math.min(offsetX, gridWidth - canvas.width));
-            offsetY = Math.max(0, Math.min(offsetY, gridHeight - canvas.height));
-
+            constrainOffsets();
             drawGrid();
         };
 
-        // Attach scroll event listener
-        canvas.addEventListener('wheel', handleScroll);
+        // Touch event handlers
+        const handleTouchStart = (e) => {
+            const touch = e.touches[0];
+            lastTouchX = touch.clientX;
+            lastTouchY = touch.clientY;
+        };
+
+        const handleTouchMove = (e) => {
+            e.preventDefault(); // Prevent native scrolling
+
+            const touch = e.touches[0];
+            const deltaX = lastTouchX - touch.clientX;
+            const deltaY = lastTouchY - touch.clientY;
+
+            offsetX += deltaX;
+            offsetY += deltaY;
+
+            lastTouchX = touch.clientX;
+            lastTouchY = touch.clientY;
+
+            constrainOffsets();
+            drawGrid();
+        };
+
+        // Constrain scrolling within grid boundaries
+        const constrainOffsets = () => {
+            offsetX = Math.max(0, Math.min(offsetX, gridWidth - canvas.width));
+            offsetY = Math.max(0, Math.min(offsetY, gridHeight - canvas.height));
+        };
+
+        // Attach event listeners
+        canvas.addEventListener('wheel', handleWheelScroll); // For PC
+        canvas.addEventListener('touchstart', handleTouchStart); // For Mobile (start of touch)
+        canvas.addEventListener('touchmove', handleTouchMove); // For Mobile (move of touch)
 
         // Initial draw
         drawGrid();
