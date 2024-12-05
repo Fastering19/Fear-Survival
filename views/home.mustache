@@ -4,12 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Scrollable Canvas Grid</title>
+    <title>Fear Survival</title>
     <link rel="stylesheet" href="home.css">
 </head>
 <body>
     <canvas id="gameCanvas"></canvas>
+    <div id="joystick-container" style="position: relative; width: 100%; height: 100vh;">
+    
+</div>
+
+    <script src="joystick.js"></script>
     <script>
+        const controllerDiv = document.getElementById('joystick-container');
+
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
 
@@ -98,6 +105,12 @@
 
         // Initial draw
         drawGrid();
+        setupJoystick(controllerDiv);
+
+        controllerDiv.addEventListener('move', function (e) {
+            const { deltaX, deltaY } = e.detail;
+            alert(`Joystick moved! DeltaX: ${deltaX}, DeltaY: ${deltaY}`);
+        });
     </script>
 </body>
 </html>
