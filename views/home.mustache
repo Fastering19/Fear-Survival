@@ -1,10 +1,71 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <title>{{Title}}</title>
-        <meta name="description" content="noop">
-    </head>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Scrollable Canvas Grid</title>
+    <link rel="stylesheet" href="home.css">
+</head>
 <body>
-    <h1>wip</h1>
+    <canvas id="gameCanvas"></canvas>
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // Set canvas size to full-screen initially
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        // Virtual grid size
+        const gridWidth = 1000;
+        const gridHeight = 1000;
+
+        // Scroll offsets
+        let offsetX = 0;
+        let offsetY = 0;
+
+        // Grid drawing function
+        const drawGrid = () => {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            ctx.strokeStyle = '#ccc';
+            ctx.lineWidth = 1;
+
+            // Draw vertical lines
+            for (let x = 0; x <= gridWidth; x += 50) {
+                ctx.beginPath();
+                ctx.moveTo(x - offsetX, 0 - offsetY);
+                ctx.lineTo(x - offsetX, gridHeight - offsetY);
+                ctx.stroke();
+            }
+
+            // Draw horizontal lines
+            for (let y = 0; y <= gridHeight; y += 50) {
+                ctx.beginPath();
+                ctx.moveTo(0 - offsetX, y - offsetY);
+                ctx.lineTo(gridWidth - offsetX, y - offsetY);
+                ctx.stroke();
+            }
+        };
+
+        // Scroll handler
+        const handleScroll = (e) => {
+            offsetX += e.deltaX;
+            offsetY += e.deltaY;
+
+            // Constrain scrolling within grid boundaries
+            offsetX = Math.max(0, Math.min(offsetX, gridWidth - canvas.width));
+            offsetY = Math.max(0, Math.min(offsetY, gridHeight - canvas.height));
+
+            drawGrid();
+        };
+
+        // Attach scroll event listener
+        canvas.addEventListener('wheel', handleScroll);
+
+        // Initial draw
+        drawGrid();
+    </script>
 </body>
 </html>
