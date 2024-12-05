@@ -1,13 +1,13 @@
 # syntax=docker/dockerfile:1
 
-FROM golang:alpine
+FROM golang:1.23
 
 # Set destination for COPY
 WORKDIR /app
 
 # Download Go modules
 COPY go.mod go.sum ./
-RUN go mod download
+RUN go mod download && go mod verify
 
 # Copy the source code. Note the slash at the end, as explained in
 # https://docs.docker.com/reference/dockerfile/#copy
@@ -16,7 +16,7 @@ RUN go mod download
 COPY . .
 
 # Build
-RUN CGO_ENABLED=0 GOOS=linux go build -o /docker-gs-ping
+RUN CGO_ENABLED=0 GOOS=linux go build -v -o /docker-gs-ping
 
 # Optional:
 # To bind to a TCP port, runtime parameters must be supplied to the docker command.
