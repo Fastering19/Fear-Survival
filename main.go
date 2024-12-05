@@ -18,8 +18,10 @@ func main() {
 	})
 
 	app.Get("/", func(c fiber.Ctx) error {
-        return c.SendString("test yo") // => ✋ register
-    }).Name("api");
+        return c.Render("home", fiber.Map{
+			"Title": "Hello, World!",
+		})
+    }).Name("home");
 
 	app.Get("/*", static.New("./static", static.Config{
 		Compress:      true,
