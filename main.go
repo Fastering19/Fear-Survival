@@ -18,6 +18,11 @@ func main() {
 		Views: engine,
 	})
 
+app.Use(logger.New(logger.Config{
+    Format: "[${ip}]:${port} <<${latency}>> ${status} - ${method} ${path}\n",
+}))
+	app.Use(pprof.New())
+
 	app.Get("/", func(c fiber.Ctx) error {
         return c.Render("home", fiber.Map{
 			"Title": "Hello, World!",
@@ -32,10 +37,7 @@ func main() {
 		MaxAge:        3600,
 	}))
 
- app.Use(logger.New(logger.Config{
-    Format: "[${ip}]:${port} <<${latency}>> ${status} - ${method} ${path}\n",
-}))
-	app.Use(pprof.New())
+ 
 
 	log.Fatal(app.Listen(":8080"))
 }
