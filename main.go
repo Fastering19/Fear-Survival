@@ -5,6 +5,7 @@ import (
 	"github.com/gofiber/fiber/v3"
 	"github.com/gofiber/fiber/v3/middleware/static"
 	"github.com/gofiber/fiber/v3/middleware/pprof"
+ "github.com/gofiber/fiber/v3/middleware/logger"
 	"github.com/gofiber/template/mustache/v2"
 
 	"log"
@@ -31,6 +32,9 @@ func main() {
 		MaxAge:        3600,
 	}))
 
+ app.Use(logger.New(logger.Config{
+    Format: "[${ip}]:${port} <<${latency}>> ${status} - ${method} ${path}\n",
+}))
 	app.Use(pprof.New())
 
 	log.Fatal(app.Listen(":8080"))
