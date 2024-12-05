@@ -1,6 +1,6 @@
 module FearSurvival
 
-go 1.20
+go 1.23.4
 
 require (
 	github.com/gofiber/fiber/v3 v3.0.0-beta.3
