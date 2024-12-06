@@ -33,6 +33,7 @@
         const yScale = 50;
         const gridWidth = xGrid*xScale;
         const gridHeight = yGrid*yScale;
+        const isMobile = 'ontouchstart' in window;
 
         // Entities
         const entities = [];
@@ -46,6 +47,8 @@
         // Touch tracking
         let lastTouchX = 0;
         let lastTouchY = 0;
+        let joystickX = 0;
+        let joystickY = 0;
 
         // animate
         let lastTime = Date.now(); 
@@ -129,12 +132,15 @@
         }
 
         controllerDiv.addEventListener('move', function (e) {
-            const { deltaX, deltaY, angle, power } = e.detail;
-            document.getElementById("joystick-dbg").innerText = `Joystick move: (DeltaX: ${deltaX.toFixed(2)}, DeltaY: ${deltaY.toFixed(2)}, angle: ${angle*180/Math.PI}), power: ${power}`
-            player.x += deltaX/50;
-            player.y += deltaY/50;
-            offsetX = player.x;
-            offsetY = player.y;
+            const { deltaX, deltaY, power, angle } = e.detail;
+            document.getElementById("joystick-dbg").innerText = `Joystick move: (DeltaX: ${deltaX.toFixed(2)}, DeltaY: ${deltaY.toFixed(2)}, angle: ${angle*180/Math.PI}), power: ${power}`;
+            joystickX = deltaX;
+            joystickY = deltaY;
+            
+            /*player.x += joystickX/50;
+            player.y += joystickY/50;
+            offsetX = player.x-canvas.width/2;
+            offsetY = player.y-canvas.height/2;*/
             //draw();
         });
 
@@ -184,15 +190,17 @@ window.addEventListener('keyup', (e) => {
 });
 
     function update(deltaTime) {
-        let xdt = 0, ydt = 0;
-        if (keys.w) ydt = -0.1 * deltaTime;  
-        if (keys.a) xdt = -0.1 * deltaTime;
-        if (keys.s) ydt = 0.1 * deltaTime;
-        if (keys.d) xdt = 0.1 * deltaTime;
-        player.x += xdt;
-        player.y += ydt;
-        offsetX += xdt;
-        offsetY += ydt;
+        if (isMobile) {
+            player.x += joystickX/50;
+            player.y += joystickY/50;
+        } else {
+            if (keys.w) player.y -= 0.1 * deltaTime;  
+            if (keys.a) player.x -= 0.1 * deltaTime;
+            if (keys.s) player.y += 0.1 * deltaTime;
+            if (keys.d) player.x += 0.1 * deltaTime;
+        }
+        offsetX = player.x-canvas.width/2;
+        offsetY = player.y-canvas.height/2;
     }
 
     function render(ctx) {
