@@ -8,8 +8,9 @@
     <link rel="stylesheet" href="home.css">
 </head>
 <body>
+    <p id="joystick-dbg">DeltaX</p>
     <canvas id="gameCanvas"></canvas>
-    <div id="joystick-container" style="position: relative; width: 100%; height: 100vh;">
+    <div id="joystick-container">
     
 </div>
 
@@ -111,7 +112,7 @@
 
         controllerDiv.addEventListener('move', function (e) {
             const { deltaX, deltaY } = e.detail;
-            alert(`Joystick moved! DeltaX: ${deltaX}, DeltaY: ${deltaY}`);
+            document.getElementById("joystick-dbg").innerText = `Joystick move: (DeltaX: ${deltaX}, DeltaY: ${deltaY})`
         });
     </script>
 </body>
