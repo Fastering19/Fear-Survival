@@ -67,11 +67,11 @@ function setupJoystick(div) {
         const maxDistance = 50; // Maximum distance from center
         const distance = Math.sqrt(offsetX * offsetX + offsetY * offsetY);
 
-        /*if (distance > maxDistance) {
+        if (distance > maxDistance) {
             const angle = Math.atan2(offsetY, offsetX);
             offsetX = maxDistance * Math.cos(angle);
             offsetY = maxDistance * Math.sin(angle);
-        }*/
+        }
 
         // Apply all transformations in a single call for performance
         innerCircle.style.transform = `translate(-50%, -50%) translate(${offsetX}px, ${offsetY}px)`;

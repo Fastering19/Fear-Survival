@@ -128,12 +128,12 @@
         window.onload = function () {
             // Initial draw
             requestAnimationFrame(gameLoop);
-            setupJoystick(controllerDiv);
+            if (isMobile) setupJoystick(controllerDiv);
         }
 
         controllerDiv.addEventListener('move', function (e) {
             const { deltaX, deltaY, power, angle } = e.detail;
-            document.getElementById("joystick-dbg").innerText = `Joystick move: (DeltaX: ${deltaX.toFixed(2)}, DeltaY: ${deltaY.toFixed(2)}, angle: ${angle*180/Math.PI}), power: ${power}`;
+            document.getElementById("joystick-dbg").innerText = `Joystick move: (DeltaX: ${deltaX.toFixed(2)}, DeltaY: ${deltaY.toFixed(2)}, angle: ${(angle*180/Math.PI+(angle>0?0:360)).toFixed(2)}), power: ${power.toFixed(2)}`;
             joystickX = deltaX;
             joystickY = deltaY;
             
