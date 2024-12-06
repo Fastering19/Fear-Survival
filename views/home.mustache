@@ -103,9 +103,11 @@
         canvas.addEventListener('touchstart', handleTouchStart); // For Mobile (start of touch)
         canvas.addEventListener('touchmove', handleTouchMove); // For Mobile (move of touch)
 
-        // Initial draw
-        drawGrid();
-        setupJoystick(controllerDiv);
+        window.onload = function () {
+            // Initial draw
+            drawGrid();
+            setupJoystick(controllerDiv);
+        }
 
         controllerDiv.addEventListener('move', function (e) {
             const { deltaX, deltaY } = e.detail;

@@ -18,9 +18,9 @@ func main() {
 		Views: engine,
 	})
 
-app.Use(logger.New(logger.Config{
-    Format: "[${ip}]:${port} <<${latency}>> ${status} - ${method} ${path}\n",
-}))
+	app.Use(logger.New(logger.Config{
+    	Format: "[${ip}]:${port} <<${latency}>> ${status} - ${method} ${path}\n",
+	}))
 	app.Use(pprof.New())
 
 	app.Get("/", func(c fiber.Ctx) error {
@@ -30,7 +30,7 @@ app.Use(logger.New(logger.Config{
     }).Name("home");
 
 	app.Get("/*", static.New("./static", static.Config{
-		Compress:      true,
+		Compress:      false,
 		ByteRange:     true,
 		Browse:        true,
 		CacheDuration: 10 * time.Second,

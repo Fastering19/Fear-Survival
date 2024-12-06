@@ -1,26 +1,36 @@
 function setupJoystick(div) {
+    // on pc: height, on mobile: width
+    const sizeRatio = Math.min(window.innerWidth, window.innerHeight) * 0.25; 
+
+    div.style.position = 'absolute';
+    div.style.width = `${sizeRatio}px`; 
+    div.style.height = `${sizeRatio}px`;
+    div.style.bottom = '0';
+    div.style.left = '0';
+
     const joystick = document.createElement('div');
     joystick.style.position = 'absolute';
-    joystick.style.bottom = '20px';
-    joystick.style.left = '20px';
-    joystick.style.width = '150px';
-    joystick.style.height = '150px';
+    joystick.style.bottom = '20%'; // Positioned relative to container
+    joystick.style.left = '20%';   // Positioned relative to container
+    joystick.style.width = '80%';  // Joystick is 80% of the container's width
+    joystick.style.height = '80%'; // Joystick is 80% of the container's height
     joystick.style.borderRadius = '50%';
-    joystick.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
-    joystick.style.touchAction = 'none'; // Prevent default touch actions
+    joystick.style.backgroundColor = 'rgba(150, 150, 150, 0.64)';
+    joystick.style.touchAction = 'none';
 
     const innerCircle = document.createElement('div');
     innerCircle.style.position = 'absolute';
     innerCircle.style.top = '50%';
     innerCircle.style.left = '50%';
-    innerCircle.style.width = '50px';
-    innerCircle.style.height = '50px';
+    innerCircle.style.width = '60%'; 
+    innerCircle.style.height = '60%';
     innerCircle.style.borderRadius = '50%';
-    innerCircle.style.backgroundColor = 'rgba(255, 255, 255, 0.8)';
+    innerCircle.style.backgroundColor = 'grey'; // Old grey inner circle
     innerCircle.style.transform = 'translate(-50%, -50%)';
 
     joystick.appendChild(innerCircle);
     div.appendChild(joystick);
+    console.log('Joystick added:', joystick);
 
     let initialTouch = null;
     let deltaX = 0;
