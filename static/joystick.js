@@ -76,9 +76,10 @@ function setupJoystick(div) {
         // Apply all transformations in a single call for performance
         innerCircle.style.transform = `translate(-50%, -50%) translate(${offsetX}px, ${offsetY}px)`;
 
+        let limitedDistance = Math.sqrt(offsetX * offsetX + offsetY * offsetY);
         deltaX = offsetX;
         deltaY = offsetY;
-        power = distance/maxDistance;
+        power = limitedDistance/maxDistance;
         angle = Math.atan2(offsetY, offsetX);
 
         emitMove();
