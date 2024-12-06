@@ -15,6 +15,7 @@
 </div>
 
     <script src="joystick.js"></script>
+    <script src="component.js"></script>
     <script>
         const controllerDiv = document.getElementById('joystick-container');
 
@@ -26,8 +27,17 @@
         canvas.height = window.innerHeight;
 
         // Virtual grid size
-        const gridWidth = 1000;
-        const gridHeight = 1000;
+        const xGrid = 100;
+        const yGrid = 100;
+        const xScale = 50;
+        const yScale = 50;
+        const gridWidth = xGrid*xScale;
+        const gridHeight = yGrid*yScale;
+
+        // Entities
+        const entities = [];
+        const player = new Player(25, 25);
+        entities.push(player);
 
         // Scroll offsets
         let offsetX = 0;
@@ -45,7 +55,7 @@
             ctx.lineWidth = 1;
 
             // Draw vertical lines
-            for (let x = 0; x <= gridWidth; x += 50) {
+            for (let x = 0; x <= gridWidth; x += xScale) {
                 ctx.beginPath();
                 ctx.moveTo(x - offsetX, 0 - offsetY);
                 ctx.lineTo(x - offsetX, gridHeight - offsetY);
@@ -53,7 +63,7 @@
             }
 
             // Draw horizontal lines
-            for (let y = 0; y <= gridHeight; y += 50) {
+            for (let y = 0; y <= gridHeight; y += xScale) {
                 ctx.beginPath();
                 ctx.moveTo(0 - offsetX, y - offsetY);
                 ctx.lineTo(gridWidth - offsetX, y - offsetY);
@@ -66,7 +76,7 @@
             offsetX += e.deltaX;
             offsetY += e.deltaY;
             constrainOffsets();
-            drawGrid();
+            draw();
         };
 
         // Touch event handlers
@@ -90,7 +100,7 @@
             lastTouchY = touch.clientY;
 
             constrainOffsets();
-            drawGrid();
+            draw();
         };
 
         // Constrain scrolling within grid boundaries
@@ -99,6 +109,11 @@
             offsetY = Math.max(0, Math.min(offsetY, gridHeight - canvas.height));
         };
 
+        const draw = () => {
+            drawGrid();
+            player.draw(ctx, offsetX, offsetY);
+        }
+
         // Attach event listeners
         canvas.addEventListener('wheel', handleWheelScroll); // For PC
         canvas.addEventListener('touchstart', handleTouchStart); // For Mobile (start of touch)
@@ -106,13 +121,16 @@
 
         window.onload = function () {
             // Initial draw
-            drawGrid();
+            draw();
             setupJoystick(controllerDiv);
         }
 
         controllerDiv.addEventListener('move', function (e) {
             const { deltaX, deltaY } = e.detail;
             document.getElementById("joystick-dbg").innerText = `Joystick move: (DeltaX: ${deltaX}, DeltaY: ${deltaY})`
+            player.x += deltaX/50;
+            player.y += deltaY/50;
+            draw();
         });
     </script>
 </body>
