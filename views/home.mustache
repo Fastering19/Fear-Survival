@@ -36,7 +36,7 @@
 
         // Entities
         const entities = [];
-        const player = new Player(25, 25);
+        const player = new Player(canvas.width/2, canvas.height/2);
         entities.push(player);
 
         // Scroll offsets
@@ -46,6 +46,9 @@
         // Touch tracking
         let lastTouchX = 0;
         let lastTouchY = 0;
+
+        // animate
+        let lastTime = Date.now(); 
 
         // Grid drawing function
         const drawGrid = () => {
@@ -76,7 +79,7 @@
             offsetX += e.deltaX;
             offsetY += e.deltaY;
             constrainOffsets();
-            draw();
+            //draw();
         };
 
         // Touch event handlers
@@ -100,7 +103,7 @@
             lastTouchY = touch.clientY;
 
             constrainOffsets();
-            draw();
+            //draw();
         };
 
         // Constrain scrolling within grid boundaries
@@ -121,17 +124,89 @@
 
         window.onload = function () {
             // Initial draw
-            draw();
+            requestAnimationFrame(gameLoop);
             setupJoystick(controllerDiv);
         }
 
         controllerDiv.addEventListener('move', function (e) {
-            const { deltaX, deltaY } = e.detail;
-            document.getElementById("joystick-dbg").innerText = `Joystick move: (DeltaX: ${deltaX}, DeltaY: ${deltaY})`
+            const { deltaX, deltaY, angle, power } = e.detail;
+            document.getElementById("joystick-dbg").innerText = `Joystick move: (DeltaX: ${deltaX.toFixed(2)}, DeltaY: ${deltaY.toFixed(2)}, angle: ${angle*180/Math.PI}), power: ${power}`
             player.x += deltaX/50;
             player.y += deltaY/50;
-            draw();
+            offsetX = player.x;
+            offsetY = player.y;
+            //draw();
         });
+
+        const keys = {
+    w: false,
+    a: false,
+    s: false,
+    d: false
+};
+
+// Add keydown event listener
+window.addEventListener('keydown', (e) => {
+    switch (e.key.toLowerCase()) {
+        case 'w':
+            keys.w = true;
+            break;
+        case 'a':
+            keys.a = true;
+            break;
+        case 's':
+            keys.s = true;
+            break;
+        case 'd':
+            keys.d = true;
+            break;
+    }
+    //emitKeyHoldEvent();
+});
+
+// Add keyup event listener
+window.addEventListener('keyup', (e) => {
+    switch (e.key.toLowerCase()) {
+        case 'w':
+            keys.w = false;
+            break;
+        case 'a':
+            keys.a = false;
+            break;
+        case 's':
+            keys.s = false;
+            break;
+        case 'd':
+            keys.d = false;
+            break;
+    }
+    //emitKeyHoldEvent();
+});
+
+    function update(deltaTime) {
+        let xdt = 0, ydt = 0;
+        if (keys.w) ydt = -0.1 * deltaTime;  
+        if (keys.a) xdt = -0.1 * deltaTime;
+        if (keys.s) ydt = 0.1 * deltaTime;
+        if (keys.d) xdt = 0.1 * deltaTime;
+        player.x += xdt;
+        player.y += ydt;
+        offsetX += xdt;
+        offsetY += ydt;
+    }
+
+    function render(ctx) {
+        draw(ctx);
+    }
+
+    function gameLoop(timestamp) {
+        update(timestamp - lastTime);
+        render();
+
+        lastTime = timestamp;
+        requestAnimationFrame(gameLoop);
+    }
+    
     </script>
 </body>
 </html>

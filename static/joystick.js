@@ -35,10 +35,12 @@ function setupJoystick(div) {
     let initialTouch = null;
     let deltaX = 0;
     let deltaY = 0;
+    let power = 0;
+    let angle = 0;
 
     // Helper function to emit move event
     const emitMove = () => {
-        const evt = new CustomEvent("move", { detail: { deltaX, deltaY } });
+        const evt = new CustomEvent("move", { detail: { deltaX, deltaY, power, angle } });
         div.dispatchEvent(evt);
     };
 
@@ -48,6 +50,8 @@ function setupJoystick(div) {
         initialTouch = e.touches[0];
         deltaX = 0;
         deltaY = 0;
+        power = 0;
+        angle = 0;
     });
 
     // Handle touch move
@@ -63,17 +67,19 @@ function setupJoystick(div) {
         const maxDistance = 50; // Maximum distance from center
         const distance = Math.sqrt(offsetX * offsetX + offsetY * offsetY);
 
-        if (distance > maxDistance) {
+        /*if (distance > maxDistance) {
             const angle = Math.atan2(offsetY, offsetX);
             offsetX = maxDistance * Math.cos(angle);
             offsetY = maxDistance * Math.sin(angle);
-        }
+        }*/
 
         // Apply all transformations in a single call for performance
         innerCircle.style.transform = `translate(-50%, -50%) translate(${offsetX}px, ${offsetY}px)`;
 
         deltaX = offsetX;
         deltaY = offsetY;
+        power = distance/maxDistance;
+        angle = Math.atan2(offsetY, offsetX);
 
         emitMove();
     });
@@ -83,6 +89,8 @@ function setupJoystick(div) {
         innerCircle.style.transform = 'translate(-50%, -50%)'; // Reset inner circle position
         deltaX = 0;
         deltaY = 0;
+        power = 0;
+        angle = 0;
         emitMove();
     });
 
